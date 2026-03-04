@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D电磁场粒子动力学仿真引擎</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<body>
+    <div id="ui-panel">
+        <h3>电磁场参数控制</h3>
+        <div class="control-group">
+            <label>磁场 B (Y轴向): <span id="b-val">-5.0</span> T</label>
+            <input type="range" id="b-slider" min="-5" max="5" step="0.1" value="-5">
+        </div>
+        <div class="control-group">
+            <label>电场 E (Y轴向): <span id="e-val">0.1</span> V/m</label>
+            <input type="range" id="e-slider" min="-2" max="2" step="0.1" value="0.1">
+        </div>
+        <button id="reset-btn">重置粒子</button>
+    </div>
+
+    <div id="chart-panel"></div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

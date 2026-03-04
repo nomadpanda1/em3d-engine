@@ -1,0 +1,65 @@
+/* ...原来的 body 和 canvas 样式保持不变 ... */
+
+#ui-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(20, 20, 30, 0.8);
+    color: #00ffcc; /* 极客荧光绿 */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #00ffcc;
+    font-family: sans-serif;
+    user-select: none;
+}
+
+#ui-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #00ffcc;
+    padding-bottom: 5px;
+}
+
+.control-group {
+    margin-bottom: 15px;
+}
+
+.control-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+input[type=range] {
+    width: 200px;
+}
+
+button {
+    background: #00ffcc;
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    width: 100%;
+}
+
+button:hover {
+    background: #00ccaa;
+}
+/* 新增图表面板样式 */
+#chart-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 250px;
+    background: rgba(20, 20, 30, 0.85); /* 半透明深色背景 */
+    border: 1px solid #00ffcc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); /* 微微的荧光发光效果 */
+    pointer-events: none; /* 让鼠标穿透图表背景，不影响拖拽3D画面 */
+}

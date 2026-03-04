@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟实验室 | 峰の专属实验集</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        /* 实验卡片样式 */
+        .card {
+            background: #fff;
+            width: 300px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .card-icon {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #fff;
+        }
+        .icon-em { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .icon-motor { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+        .icon-coming { background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%); }
+        
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .card-desc {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        .back-home {
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+        .back-home a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .back-home a:hover {
+            background: #3498db;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><i class="fa-solid fa-flask-vial"></i> 虚拟实验室</h1>
+        <p>探索物理规律，构建仿真世界</p>
+    </div>
+
+    <div class="container">
+        <a href="./em3d/index.html" class="card">
+            <div class="card-icon icon-em">
+                <i class="fa-solid fa-magnet"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-title">Web 3D 电磁场仿真</div>
+                <div class="card-desc">基于浏览器的三维电磁场可视化引擎，支持复杂磁场分布的实时计算与渲染。</div>
+            </div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="card-icon icon-motor">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-title">电机控制与 PLC 仿真</div>
+                <div class="card-desc">建立控制模型，模拟现代供配电与自动化控制系统运行状态。</div>
+            </div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="card-icon icon-coming">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-title">更多实验孵化中</div>
+                <div class="card-desc">持续探索新的技术栈，更多好玩的硬核 Demo 敬请期待...</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="back-home">
+        <a href="http://www.lyf233.cn"><i class="fa-solid fa-house"></i> 返回主站</a>
+    </div>
+
+</body>
+</html>
