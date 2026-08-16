@@ -4,6 +4,27 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Vector3 as MathVec3 } from './math.js';
 import { Particle } from './particle.js';
 
+const API_ROOT = ['localhost', '127.0.0.1'].includes(location.hostname) ? 'http://127.0.0.1:8090/api/v1' : '/api/v1';
+const CLIENT_KEY = 'lyf_lab_client_id';
+function clientId() {
+    let value = localStorage.getItem(CLIENT_KEY);
+    if (!/^[0-9a-f-]{36}$/i.test(value || '')) {
+        value = crypto.randomUUID();
+        localStorage.setItem(CLIENT_KEY, value);
+    }
+    return value;
+}
+async function api(path, options = {}) {
+    const response = await fetch(API_ROOT + path, {
+        credentials: 'include',
+        ...options,
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        signal: AbortSignal.timeout(9000),
+    });
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    return response.status === 204 ? null : response.json();
+}
+
 // ==========================================
 // --- 1. 基础场景与摄像机 ---
 // ==========================================
@@ -47,7 +68,8 @@ let trailCount = 0;
 // ==========================================
 let E_field = new MathVec3(0, 0.1, 0); // 初始电场 0.1 V/m
 let B_field = new MathVec3(0, -5.0, 0); // 初始磁场 -5.0 T
-let myParticle = new Particle(1, 1, new MathVec3(0, 0, 0), new MathVec3(5, 0, 0));
+let initialSpeed = 5;
+let myParticle = new Particle(1, 1, new MathVec3(0, 0, 0), new MathVec3(initialSpeed, 0, 0));
 
 // ==========================================
 // --- 4. 场线可视化矢量箭头 ---
@@ -161,7 +183,7 @@ eSlider.addEventListener('input', (e) => {
 
 resetBtn.addEventListener('click', () => {
     myParticle.p = new MathVec3(0, 0, 0);
-    myParticle.v = new MathVec3(5, 0, 0);
+    myParticle.v = new MathVec3(initialSpeed, 0, 0);
     trailCount = 0; // 清空 3D 轨迹
     timeData = [];  // 清空图表数据
     kineticEnergyData = [];
@@ -213,6 +235,91 @@ function animate() {
 }
 
 animate();
+
+const presetSelect = document.getElementById('preset-select');
+const saveRunButton = document.getElementById('save-run-btn');
+const syncState = document.getElementById('sync-state');
+const runList = document.getElementById('run-list');
+
+function applyParameters(parameters) {
+    B_field.y = Number(parameters.magnetic_field ?? B_field.y);
+    E_field.y = Number(parameters.electric_field ?? E_field.y);
+    initialSpeed = Number(parameters.velocity ?? initialSpeed);
+    bSlider.value = String(B_field.y);
+    eSlider.value = String(E_field.y);
+    bVal.innerText = B_field.y.toFixed(1);
+    eVal.innerText = E_field.y.toFixed(1);
+    updateFieldArrows();
+    resetBtn.click();
+}
+
+async function loadPresets() {
+    try {
+        const data = await api(`/lab/presets?client_id=${clientId()}&experiment=electromagnetic-particle`);
+        data.items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = item.name;
+            option.dataset.parameters = JSON.stringify(item.parameters);
+            presetSelect.appendChild(option);
+        });
+        presetSelect.addEventListener('change', () => {
+            const raw = presetSelect.selectedOptions[0]?.dataset.parameters;
+            if (raw) applyParameters(JSON.parse(raw));
+        });
+        syncState.textContent = '实验数据服务在线';
+    } catch (error) {
+        syncState.textContent = '本地模式：预设服务暂不可用';
+    }
+}
+
+function renderRuns(items) {
+    if (!items.length) {
+        runList.innerHTML = '<p class="empty-run">暂无实验记录</p>';
+        return;
+    }
+    runList.innerHTML = items.map(item => `<article class="run-item" data-parameters='${JSON.stringify(item.parameters)}'><strong>B ${item.parameters.magnetic_field} T / E ${item.parameters.electric_field} V·m⁻¹</strong>${item.results.final_speed} m·s⁻¹ · ${item.results.trail_points} points<br>${new Date(item.created_at).toLocaleString('zh-CN', { hour12: false })}</article>`).join('');
+    runList.querySelectorAll('.run-item').forEach(item => {
+        item.addEventListener('click', () => applyParameters(JSON.parse(item.dataset.parameters)));
+    });
+}
+
+async function loadRuns() {
+    try {
+        const data = await api(`/lab/runs?client_id=${clientId()}&experiment=electromagnetic-particle`);
+        renderRuns(data.items);
+    } catch (error) {
+        runList.innerHTML = '<p class="empty-run">历史记录暂不可用</p>';
+    }
+}
+
+saveRunButton.addEventListener('click', async () => {
+    const speed = Math.hypot(myParticle.v.x, myParticle.v.y, myParticle.v.z);
+    const energy = .5 * myParticle.m * speed * speed;
+    saveRunButton.disabled = true;
+    syncState.textContent = '正在保存实验快照';
+    try {
+        await api('/lab/runs', {
+            method: 'POST',
+            body: JSON.stringify({
+                client_id: clientId(),
+                experiment: 'electromagnetic-particle',
+                parameters: { magnetic_field: B_field.y, electric_field: E_field.y, velocity: initialSpeed, charge: myParticle.q, mass: myParticle.m },
+                results: { duration: Number(simTime.toFixed(3)), final_speed: Number(speed.toFixed(4)), kinetic_energy: Number(energy.toFixed(4)), trail_points: trailCount, final_x: Number(myParticle.p.x.toFixed(4)), final_y: Number(myParticle.p.y.toFixed(4)), final_z: Number(myParticle.p.z.toFixed(4)) },
+                notes: '',
+            }),
+        });
+        syncState.textContent = '实验记录已保存';
+        await loadRuns();
+    } catch (error) {
+        syncState.textContent = '保存失败，请检查后端连接';
+    } finally {
+        saveRunButton.disabled = false;
+    }
+});
+
+loadPresets();
+loadRuns();
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;

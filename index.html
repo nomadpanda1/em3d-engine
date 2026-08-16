@@ -1,148 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>虚拟实验室 | 峰の专属实验集</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .header {
-            margin-top: 60px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .header p {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
-        /* 实验卡片样式 */
-        .card {
-            background: #fff;
-            width: 300px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-        .card-icon {
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: #fff;
-        }
-        .icon-em { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .icon-motor { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
-        .icon-coming { background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%); }
-        
-        .card-content {
-            padding: 20px;
-            text-align: center;
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        .card-desc {
-            font-size: 0.95rem;
-            color: #7f8c8d;
-            line-height: 1.5;
-        }
-        .back-home {
-            margin-top: 40px;
-            margin-bottom: 60px;
-        }
-        .back-home a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-            padding: 10px 20px;
-            border: 2px solid #3498db;
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
-        .back-home a:hover {
-            background: #3498db;
-            color: #fff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="峰的项目工坊：工程仿真、物联网、AI 与个人项目的统一入口。">
+  <title>峰的项目工坊 | LYF Workshop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    :root{color-scheme:light;--bg:#edf1f2;--surface:#fff;--soft:#f6f8f8;--ink:#172126;--muted:#68757b;--line:#d2dadd;--teal:#087b78;--teal-soft:#daf1ed;--amber:#c77a17;--coral:#cf5d52;--green:#238155}
+    *{box-sizing:border-box;letter-spacing:0}html{scroll-behavior:smooth}body{margin:0;min-width:320px;min-height:100vh;color:var(--ink);background:var(--bg);font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:inherit}button{font:inherit}
+    .topbar{position:sticky;top:0;z-index:20;height:62px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:blur(14px)}
+    .topbar-inner,.workspace,footer{width:min(1240px,calc(100% - 40px));margin:auto}.topbar-inner{height:100%;display:flex;align-items:center;gap:14px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:780}.brand-mark{display:grid;width:34px;height:34px;place-items:center;color:#fff;border-radius:5px;background:var(--teal)}.brand small{display:block;color:var(--muted);font:500 .62rem ui-monospace,Consolas,monospace}.top-actions{margin-left:auto;display:flex;gap:6px}.icon-button{display:grid;width:38px;height:38px;place-items:center;color:var(--muted);border:1px solid transparent;border-radius:5px;text-decoration:none}.icon-button:hover,.icon-button:focus-visible{color:var(--teal);border-color:var(--line);background:var(--soft);outline:none}
+    .workspace{padding:38px 0 68px}.overview{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;padding:30px 0 34px;border-bottom:1px solid var(--line)}.eyebrow{margin:0 0 9px;color:var(--teal);font:700 .7rem ui-monospace,Consolas,monospace;text-transform:uppercase}.overview h1{margin:0;font-size:clamp(2rem,5vw,3.5rem);line-height:1.06}.overview-copy{max-width:670px;margin:14px 0 0;color:var(--muted);line-height:1.75}.system-board{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--line);gap:1px}.system-cell{min-height:92px;padding:15px;background:var(--surface)}.system-cell span,.system-cell strong{display:block}.system-cell span{color:var(--muted);font-size:.68rem}.system-cell strong{margin-top:9px;font:750 1rem ui-monospace,Consolas,monospace}.online{color:var(--green)}
+    .toolbar{margin:28px 0 16px;display:flex;align-items:end;justify-content:space-between;gap:18px}.toolbar h2{margin:0;font-size:1.15rem}.filters{display:flex;gap:4px}.filter{min-height:34px;padding:0 11px;color:var(--muted);border:1px solid transparent;border-radius:4px;background:transparent;cursor:pointer}.filter:hover,.filter.is-active{color:var(--teal);border-color:#b9d6d3;background:#f5fbfa}
+    .project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.project{min-width:0;min-height:330px;display:grid;grid-template-rows:150px 1fr;color:var(--ink);border:1px solid var(--line);border-radius:7px;background:var(--surface);overflow:hidden;text-decoration:none;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.project[href]:hover,.project[href]:focus-visible{transform:translateY(-3px);border-color:#9fc8c4;box-shadow:0 16px 34px rgba(34,53,59,.09);outline:none}.project[hidden]{display:none}.project-visual{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:#152126;color:#dceae7}.project-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none}.visual-label{position:absolute;z-index:2;top:12px;left:14px;color:rgba(255,255,255,.62);font:650 .62rem ui-monospace,Consolas,monospace}.project-body{padding:20px;display:flex;flex-direction:column}.project-head{display:flex;align-items:center;gap:10px}.project-icon{display:grid;width:38px;height:38px;place-items:center;color:var(--teal);border:1px solid #b9d6d3;border-radius:5px;background:#f4fbfa}.status{margin-left:auto;padding:4px 7px;color:var(--green);border:1px solid #b7d8c5;border-radius:3px;background:#f2faf5;font:700 .61rem ui-monospace,Consolas,monospace}.project h3{margin:16px 0 8px;font-size:1.17rem}.project p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.68}.project-meta{margin-top:auto;padding-top:18px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}.project-meta span{padding:4px 6px;color:#55646a;border:1px solid var(--line);background:var(--soft);font:600 .61rem ui-monospace,Consolas,monospace}.open{margin-left:auto!important;color:var(--teal)!important;border:0!important;background:transparent!important}
+    .field-preview{position:absolute;inset:35px 18px 14px}.orbit{position:absolute;border:1px solid rgba(92,226,205,.46);border-radius:50%;transform:rotate(-18deg)}.orbit.one{inset:12px 22%}.orbit.two{inset:24px 8%;transform:rotate(24deg)}.particle{position:absolute;left:54%;top:42%;width:13px;height:13px;border-radius:50%;background:#ffd16b;box-shadow:0 0 18px #ffd16b}.field-axis{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22)}
+    .motor-preview{position:absolute;inset:38px 16px 18px;display:flex;align-items:end;gap:4px}.motor-preview i{flex:1;min-width:3px;border-radius:2px 2px 0 0;background:#52cfc0}.motor-preview i:nth-child(3n){background:#e8ad55}
+    .iot-preview{position:absolute;inset:38px 16px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.iot-value{display:flex;flex-direction:column;justify-content:end;padding:9px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}.iot-value small{color:rgba(255,255,255,.5);font-size:.57rem}.iot-value strong{margin-top:7px;color:#70e0ce;font:700 .9rem ui-monospace,Consolas,monospace}
+    .ai-preview{position:absolute;inset:40px 16px 16px;display:grid;gap:7px}.ai-line{height:26px;padding:0 9px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);font-size:.64rem}.ai-line i{color:#70e0ce}.ai-line:nth-child(2){width:86%}.ai-line:nth-child(3){width:68%}
+    .reserved{min-height:250px;grid-template-rows:1fr;color:#7b878c;background:#f4f6f6;border-style:dashed}.reserved .project-body{justify-content:center;align-items:center;text-align:center}.reserved .project-icon{color:#89969b;border-color:#cbd3d6;background:#eef1f2}.reserved .status{color:#8a6a3d;border-color:#dfcba9;background:#fff9ee}.reserved p{max-width:340px}.reserved .project-meta{margin-top:14px}.reserved .project-meta span{background:transparent}
+    .foot-band{margin-top:32px;padding:20px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.78rem}footer{padding:20px 0 34px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:.76rem}footer a{color:var(--teal);text-decoration:none}
+    @media(max-width:860px){.overview{grid-template-columns:1fr}.system-board{max-width:520px}.project-grid{grid-template-columns:1fr}.project{min-height:310px}}
+    @media(max-width:560px){.topbar-inner,.workspace,footer{width:calc(100% - 24px)}.brand small{display:none}.workspace{padding-top:24px}.overview{padding-top:16px}.toolbar{align-items:flex-start;flex-direction:column}.filters{width:100%;overflow-x:auto}.filter{flex:none}.project{grid-template-rows:128px 1fr}.iot-preview{grid-template-columns:repeat(2,1fr)}.iot-value:nth-child(n+3){display:none}.foot-band,footer{flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.project{transition:none}}
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1><i class="fa-solid fa-flask-vial"></i> 虚拟实验室</h1>
-        <p>探索物理规律，构建仿真世界</p>
-    </div>
-
-    <div class="container">
-        <a href="./em3d/index.html" class="card">
-            <div class="card-icon icon-em">
-                <i class="fa-solid fa-magnet"></i>
-            </div>
-            <div class="card-content">
-                <div class="card-title">Web 3D 电磁场仿真</div>
-                <div class="card-desc">基于浏览器的三维电磁场可视化引擎，支持复杂磁场分布的实时计算与渲染。</div>
-            </div>
-        </a>
-
-        <a href="#" class="card">
-            <div class="card-icon icon-motor">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="card-content">
-                <div class="card-title">电机控制与 PLC 仿真</div>
-                <div class="card-desc">建立控制模型，模拟现代供配电与自动化控制系统运行状态。</div>
-            </div>
-        </a>
-
-        <a href="#" class="card">
-            <div class="card-icon icon-coming">
-                <i class="fa-solid fa-code"></i>
-            </div>
-            <div class="card-content">
-                <div class="card-title">更多实验孵化中</div>
-                <div class="card-desc">持续探索新的技术栈，更多好玩的硬核 Demo 敬请期待...</div>
-            </div>
-        </a>
-    </div>
-
-    <div class="back-home">
-        <a href="http://www.lyf233.cn"><i class="fa-solid fa-house"></i> 返回主站</a>
-    </div>
-
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="./"><span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span><span>LYF WORKSHOP<small>PROJECTS / EXPERIMENTS / SYSTEMS</small></span></a><nav class="top-actions" aria-label="全站导航"><a class="icon-button" href="https://github.com/nomadpanda1" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github"></i></a><a class="icon-button" href="https://www.lyf233.cn/" aria-label="返回主页" title="返回主页"><i class="fa-solid fa-house"></i></a></nav></div></header>
+  <main class="workspace">
+    <section class="overview"><div><p class="eyebrow">Personal project workspace / 2026</p><h1>峰的项目工坊</h1><p class="overview-copy">这里收纳能够实际运行的工程项目：浏览器仿真、物联网数字孪生、知识检索与后续作品。每个入口都对应可操作的系统，而不是静态展示。</p></div><div class="system-board" aria-label="项目状态"><div class="system-cell"><span>可运行项目</span><strong>04 ACTIVE</strong></div><div class="system-cell"><span>预留位置</span><strong>02 RESERVED</strong></div><div class="system-cell"><span>后端服务</span><strong class="online" id="api-state">CONNECTING</strong></div><div class="system-cell"><span>最近同步</span><strong id="sync-time">--:--:--</strong></div></div></section>
+    <section aria-labelledby="projects-title"><div class="toolbar"><h2 id="projects-title">项目索引</h2><div class="filters" role="group" aria-label="项目筛选"><button class="filter is-active" data-filter="all">全部</button><button class="filter" data-filter="simulation">仿真</button><button class="filter" data-filter="iot">物联网</button><button class="filter" data-filter="ai">AI</button></div></div>
+      <div class="project-grid">
+        <a class="project" data-kind="simulation" href="./em3d/"><div class="project-visual"><span class="visual-label">LIVE PHYSICS / WEBGL</span><div class="field-preview"><span class="field-axis"></span><span class="orbit one"></span><span class="orbit two"></span><span class="particle"></span></div></div><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-magnet"></i></span><span class="status">RUNNING</span></div><h3>3D 电磁场粒子动力学</h3><p>实时调节电场与磁场，观察带电粒子的三维轨迹、速度变化并保存实验记录。</p><div class="project-meta"><span>THREE.JS</span><span>WEBGL</span><span>BACKEND</span><span class="open">进入项目 <i class="fa-solid fa-arrow-right"></i></span></div></div></a>
+        <a class="project" data-kind="simulation" href="./motor-sim/"><div class="project-visual"><span class="visual-label">RK4 RESPONSE / 10 SEC</span><div class="motor-preview" aria-hidden="true"><i style="height:12%"></i><i style="height:24%"></i><i style="height:48%"></i><i style="height:71%"></i><i style="height:88%"></i><i style="height:96%"></i><i style="height:86%"></i><i style="height:79%"></i><i style="height:82%"></i><i style="height:84%"></i><i style="height:84%"></i><i style="height:84%"></i></div></div><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="status">RUNNING</span></div><h3>直流电机阶跃响应</h3><p>调整电压、负载、惯量与电阻，使用 RK4 计算转速、电流和稳态指标。</p><div class="project-meta"><span>MOTOR</span><span>RK4</span><span>ECHARTS</span><span class="open">进入项目 <i class="fa-solid fa-arrow-right"></i></span></div></div></a>
+        <a class="project" data-kind="iot" href="https://iot.lyf233.cn/"><div class="project-visual"><span class="visual-label" id="iot-source">IOT DIGITAL TWIN</span><div class="iot-preview"><div class="iot-value"><small>功率</small><strong id="iot-power">-- kW</strong></div><div class="iot-value"><small>频率</small><strong id="iot-frequency">-- Hz</strong></div><div class="iot-value"><small>温度</small><strong id="iot-temperature">-- °C</strong></div><div class="iot-value"><small>负载</small><strong id="iot-load">-- %</strong></div></div></div><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-tower-broadcast"></i></span><span class="status" id="iot-status">CONNECTING</span></div><h3>物联网能源控制台</h3><p>查看设备遥测、能源构成、健康度与告警，并通过后端审计控制指令。</p><div class="project-meta"><span>TELEMETRY</span><span>DIGITAL TWIN</span><span>MYSQL</span><span class="open">打开控制台 <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></div></a>
+        <a class="project" data-kind="ai" href="https://ai.lyf233.cn/"><div class="project-visual"><span class="visual-label">RAG KNOWLEDGE WORKBENCH</span><div class="ai-preview"><div class="ai-line"><i class="fa-solid fa-magnifying-glass"></i>跨站全文与向量检索</div><div class="ai-line"><i class="fa-solid fa-sparkles"></i>结合来源生成回答</div><div class="ai-line"><i class="fa-solid fa-link"></i>保留证据与跳转</div></div></div><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-brain"></i></span><span class="status">ONLINE</span></div><h3>AI 知识工作台</h3><p>检索博客、作者资料和项目内容，再通过 RAG 对话整理答案与来源。</p><div class="project-meta"><span>HYBRID SEARCH</span><span>RAG</span><span>CHAT</span><span class="open">打开工作台 <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></div></a>
+        <article class="project reserved" data-kind="reserved"><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-plus"></i></span><span class="status">RESERVED 01</span></div><h3>下一个项目</h3><p>已预留独立入口、状态与技术标签区域，后续可接入新的个人作品。</p><div class="project-meta"><span>WAITING FOR PROJECT</span></div></div></article>
+        <article class="project reserved" data-kind="reserved"><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-plus"></i></span><span class="status">RESERVED 02</span></div><h3>下一个项目</h3><p>适合放置新的硬件系统、AI 应用、课程设计或完整工程项目。</p><div class="project-meta"><span>WAITING FOR PROJECT</span></div></div></article>
+      </div>
+    </section>
+    <div class="foot-band"><span>项目状态由后端与实际服务共同确认</span><span id="project-note">正在读取运行状态</span></div>
+  </main>
+  <footer><span>LYF Workshop · Built and maintained by 峰</span><a href="https://www.lyf233.cn/">返回 www.lyf233.cn</a></footer>
+  <script>
+    (()=>{
+      const API_ROOT=['localhost','127.0.0.1'].includes(location.hostname)?'http://127.0.0.1:8090/api/v1':'/api/v1';
+      const text=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=value};
+      document.querySelectorAll('.filter').forEach(button=>button.onclick=()=>{document.querySelectorAll('.filter').forEach(item=>item.classList.toggle('is-active',item===button));document.querySelectorAll('.project').forEach(project=>project.hidden=button.dataset.filter!=='all'&&project.dataset.kind!==button.dataset.filter)});
+      async function refresh(){try{const [health,iot]=await Promise.all([fetch(`${API_ROOT}/health`,{signal:AbortSignal.timeout(7000)}).then(r=>{if(!r.ok)throw new Error();return r.json()}),fetch(`${API_ROOT}/iot/overview`,{signal:AbortSignal.timeout(7000)}).then(r=>{if(!r.ok)throw new Error();return r.json()})]);const last=iot.telemetry?.at(-1);text('api-state',`ONLINE ${health.version}`);text('sync-time',new Date().toLocaleTimeString('zh-CN',{hour12:false}));if(last){text('iot-power',`${last.power.toFixed(2)} kW`);text('iot-frequency',`${last.frequency.toFixed(2)} Hz`);text('iot-temperature',`${last.temperature.toFixed(1)} °C`);text('iot-load',`${last.load_percent.toFixed(0)} %`)}text('iot-source',iot.source==='digital-twin'?'IOT DIGITAL TWIN':'IOT LIVE DEVICE');text('iot-status','ONLINE');text('project-note',`${iot.device?.name||'设备'} · ${iot.alerts?.filter(item=>!item.acknowledged_at).length||0} 条待确认事件`)}catch(error){text('api-state','LOCAL MODE');text('iot-status','DEGRADED');text('project-note','后端暂不可用，浏览器仿真仍可独立运行')}}
+      refresh();setInterval(refresh,15000);
+    })();
+  </script>
 </body>
 </html>

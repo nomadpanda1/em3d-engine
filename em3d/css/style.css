@@ -1,65 +1,109 @@
-/* ...原来的 body 和 canvas 样式保持不变 ... */
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #05090d; }
+canvas { display: block; width: 100%; height: 100%; }
+
+.lab-links {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+}
+.lab-links a {
+    padding: 9px 12px;
+    color: #b8c7c9;
+    border: 1px solid #35525a;
+    border-radius: 5px;
+    background: rgba(8, 14, 18, .86);
+    font: 13px system-ui, sans-serif;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+}
+.lab-links a:hover, .lab-links a:focus-visible { color: #00ffcc; border-color: #00ffcc; outline: none; }
 
 #ui-panel {
     position: absolute;
+    z-index: 5;
     top: 20px;
     left: 20px;
-    background: rgba(20, 20, 30, 0.8);
-    color: #00ffcc; /* 极客荧光绿 */
+    width: 280px;
     padding: 20px;
-    border-radius: 8px;
+    color: #00ffcc;
     border: 1px solid #00ffcc;
-    font-family: sans-serif;
+    border-radius: 6px;
+    background: rgba(12, 18, 24, 0.9);
+    font-family: system-ui, sans-serif;
     user-select: none;
+    backdrop-filter: blur(8px);
 }
 
 #ui-panel h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 255, 204, .45);
     font-size: 16px;
-    border-bottom: 1px solid #00ffcc;
-    padding-bottom: 5px;
 }
 
-.control-group {
-    margin-bottom: 15px;
-}
-
-.control-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-input[type=range] {
-    width: 200px;
-}
+.engine-status { display: flex; align-items: center; gap: 7px; margin: 0 0 16px; color: #8ba5a1; font: 10px monospace; }
+.engine-status span { width: 7px; height: 7px; border-radius: 50%; background: #00ffcc; box-shadow: 0 0 8px rgba(0,255,204,.8); }
+.control-group { margin-bottom: 15px; }
+.control-group label { display: block; margin-bottom: 6px; font-size: 13px; }
+input[type=range] { width: 100%; accent-color: #00ffcc; }
+select { width: 100%; height: 34px; padding: 0 8px; color: #d8f6ef; border: 1px solid #35525a; border-radius: 4px; background: #091115; }
 
 button {
-    background: #00ffcc;
-    color: #000;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: bold;
     width: 100%;
+    padding: 9px 15px;
+    color: #00110d;
+    border: 0;
+    border-radius: 4px;
+    background: #00ffcc;
+    cursor: pointer;
+    font-weight: 700;
 }
+button:hover, button:focus-visible { background: #48ffdb; outline: 2px solid #fff; outline-offset: 2px; }
+.button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.button-row .secondary { color: #00ffcc; border: 1px solid #00ffcc; background: transparent; }
+#sync-state { min-height: 16px; margin-top: 9px; color: #78938e; font: 10px/1.4 monospace; }
 
-button:hover {
-    background: #00ccaa;
-}
-/* 新增图表面板样式 */
+#run-panel { position: absolute; z-index: 5; top: 62px; right: 20px; width: 280px; max-height: 210px; overflow: auto; color: #c6d7d5; border: 1px solid #35525a; border-radius: 5px; background: rgba(8,14,18,.9); font-family: system-ui,sans-serif; backdrop-filter: blur(8px); }
+#run-panel summary { padding: 10px 12px; color: #00ffcc; cursor: pointer; font-size: 12px; font-weight: 700; }
+#run-list { display: grid; gap: 6px; padding: 0 10px 10px; }
+.run-item { padding: 8px; color: #adc0bd; border: 1px solid #293b40; background: #0b1418; cursor: pointer; font: 10px/1.5 monospace; }
+.run-item:hover { border-color: #00ffcc; }
+.run-item strong { display: block; color: #e3f3ef; font-size: 11px; }
+.empty-run { color: #78938e; font-size: 11px; }
+
 #chart-panel {
     position: absolute;
-    bottom: 20px;
     right: 20px;
+    bottom: 20px;
     width: 400px;
     height: 250px;
-    background: rgba(20, 20, 30, 0.85); /* 半透明深色背景 */
-    border: 1px solid #00ffcc;
-    border-radius: 8px;
     padding: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2); /* 微微的荧光发光效果 */
-    pointer-events: none; /* 让鼠标穿透图表背景，不影响拖拽3D画面 */
+    border: 1px solid #00ffcc;
+    border-radius: 6px;
+    background: rgba(12, 18, 24, 0.9);
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.14);
+    pointer-events: none;
+}
+
+@media (max-width: 760px) {
+    .lab-links { top: 10px; right: 10px; }
+    .lab-links a { padding: 8px 10px; font-size: 12px; }
+    #ui-panel { top: 56px; left: 10px; width: min(280px, calc(100vw - 20px)); padding: 14px; }
+    #chart-panel { left: 10px; right: 10px; bottom: 10px; width: auto; height: 190px; }
+    #run-panel { top: 56px; right: 10px; width: min(260px, calc(100vw - 20px)); max-height: 150px; }
+}
+
+@media (max-height: 680px) and (orientation: landscape) {
+    #ui-panel { top: 10px; left: 10px; width: 240px; padding: 12px; }
+    .lab-links { top: 10px; right: 10px; }
+    #chart-panel { right: 10px; bottom: 10px; width: 340px; height: 170px; }
+    .control-group { margin-bottom: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; }
 }
