@@ -32,7 +32,7 @@
   <header class="topbar"><div class="topbar-inner"><a class="brand" href="./"><span class="brand-mark"><i class="fa-solid fa-layer-group"></i></span><span>LYF WORKSHOP<small>PROJECTS / EXPERIMENTS / SYSTEMS</small></span></a><nav class="top-actions" aria-label="全站导航"><a class="icon-button" href="https://github.com/nomadpanda1" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github"></i></a><a class="icon-button" href="https://www.lyf233.cn/" aria-label="返回主页" title="返回主页"><i class="fa-solid fa-house"></i></a></nav></div></header>
   <main class="workspace">
     <section class="overview"><div><p class="eyebrow">Personal project workspace / 2026</p><h1>峰的项目工坊</h1><p class="overview-copy">这里收纳能够实际运行的工程项目：浏览器仿真、物联网数字孪生、预测性维护、工程自动化与 AI。每个入口都对应可操作的系统，而不是静态展示。</p></div><div class="system-board" aria-label="项目状态"><div class="system-cell"><span>可运行项目</span><strong>06 ACTIVE</strong></div><div class="system-cell"><span>在线实验</span><strong>02 LIVE</strong></div><div class="system-cell"><span>后端服务</span><strong class="online" id="api-state">CONNECTING</strong></div><div class="system-cell"><span>最近同步</span><strong id="sync-time">--:--:--</strong></div></div></section>
-    <section class="live-lab" aria-labelledby="live-lab-title"><div class="live-lab-head"><div><h2 id="live-lab-title">实时实验台</h2><p>拖动参数后由后端重新计算，结果与曲线即时更新。</p></div><span class="live-state"><i></i><span id="live-lab-state-text">CONNECTING</span></span></div><div class="live-lab-layout"><div class="live-controls"><div class="lab-modes" role="group" aria-label="实验类型"><button class="lab-mode is-active" type="button" data-lab-mode="electromagnetic-particle">电磁粒子</button><button class="lab-mode" type="button" data-lab-mode="dc-motor-response">直流电机</button></div><div class="live-fields" id="live-fields"></div><div class="live-actions"><button class="live-action primary" id="save-live-run" type="button"><i class="fa-solid fa-floppy-disk"></i>保存记录</button><a class="live-action" id="open-full-lab" href="./em3d/"><i class="fa-solid fa-up-right-from-square"></i>完整实验</a></div><div class="live-message" id="live-message" aria-live="polite">正在连接计算服务</div></div><div class="live-output"><div class="live-chart-wrap"><canvas class="live-chart" id="live-chart" aria-label="实时实验曲线"></canvas></div><div class="live-metrics" id="live-metrics"></div></div></div></section>
+    <section class="live-lab" aria-labelledby="live-lab-title"><div class="live-lab-head"><div><h2 id="live-lab-title">实时实验台</h2><p>拖动参数后由后端重新计算，结果与曲线即时更新。</p></div><span class="live-state"><i></i><span id="live-lab-state-text">CONNECTING</span></span></div><div class="live-lab-layout"><div class="live-controls"><div class="lab-modes" role="group" aria-label="实验类型"><button class="lab-mode is-active" type="button" data-lab-mode="electromagnetic-particle">电磁粒子</button><button class="lab-mode" type="button" data-lab-mode="dc-motor-response">直流电机</button></div><div class="live-fields" id="live-fields"></div><div class="live-actions"><button class="live-action primary" id="save-live-run" type="button" disabled><i class="fa-solid fa-floppy-disk"></i>保存记录</button><a class="live-action" id="open-full-lab" href="./em3d/"><i class="fa-solid fa-up-right-from-square"></i>完整实验</a></div><div class="live-message" id="live-message" aria-live="polite">正在连接计算服务</div></div><div class="live-output"><div class="live-chart-wrap"><canvas class="live-chart" id="live-chart" aria-label="实时实验曲线"></canvas></div><div class="live-metrics" id="live-metrics"></div></div></div></section>
     <section aria-labelledby="projects-title"><div class="toolbar"><h2 id="projects-title">项目索引</h2><div class="toolbar-actions"><div class="filters" role="group" aria-label="项目筛选"><button class="filter is-active" data-filter="all">全部</button><button class="filter" data-filter="simulation">仿真</button><button class="filter" data-filter="iot">物联网</button><button class="filter" data-filter="ai">AI</button><button class="filter" data-filter="phm">PHM</button><button class="filter" data-filter="tool">工程工具</button></div><button class="archive-trigger" id="open-archive" type="button"><i class="fa-solid fa-folder-open"></i>项目档案</button></div></div>
       <div class="project-grid">
         <a class="project" data-kind="simulation" href="./em3d/"><div class="project-visual"><span class="visual-label">LIVE PHYSICS / WEBGL</span><div class="field-preview"><span class="field-axis"></span><span class="orbit one"></span><span class="orbit two"></span><span class="particle"></span></div></div><div class="project-body"><div class="project-head"><span class="project-icon"><i class="fa-solid fa-magnet"></i></span><span class="status">RUNNING</span></div><h3>3D 电磁场粒子动力学</h3><p>实时调节电场与磁场，观察带电粒子的三维轨迹、速度变化并保存实验记录。</p><div class="project-meta"><span>THREE.JS</span><span>WEBGL</span><span>BACKEND</span><span class="open">进入项目 <i class="fa-solid fa-arrow-right"></i></span></div></div></a>
@@ -84,45 +84,63 @@
       };
       let labMode='electromagnetic-particle';
       let labTimer=0;
+      let labRequestController=null;
+      let labRequestId=0;
+      let labDrawFrame=0;
       let latestSimulation=null;
+      const labResultCache=new Map();
       let labClientId=localStorage.getItem('lab_client_id');
       if(!/^[0-9a-f-]{36}$/i.test(labClientId||'')){labClientId=crypto.randomUUID();localStorage.setItem('lab_client_id',labClientId)}
       function labParameters(){return Object.fromEntries([...document.querySelectorAll('[data-lab-parameter]')].map(input=>[input.dataset.labParameter,Number(input.value)]))}
       function renderLabFields(){
         const config=labConfigs[labMode];
+        document.getElementById('save-live-run').disabled=true;
         document.getElementById('live-fields').innerHTML=config.fields.map(([key,label,unit,min,max,step,value])=>`<div class="live-field"><label for="lab-${key}"><span>${label}</span><output id="lab-${key}-value">${value} ${unit}</output></label><input id="lab-${key}" data-lab-parameter="${key}" data-unit="${unit}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`).join('');
         document.getElementById('open-full-lab').href=config.href;
-        document.querySelectorAll('[data-lab-parameter]').forEach(input=>input.addEventListener('input',()=>{text(`${input.id}-value`,`${input.value} ${input.dataset.unit}`);scheduleLab()}));
+        document.querySelectorAll('[data-lab-parameter]').forEach(input=>{
+          input.addEventListener('input',()=>{document.getElementById('save-live-run').disabled=true;text(`${input.id}-value`,`${input.value} ${input.dataset.unit}`);text('live-lab-state-text','PARAMETERS PENDING');scheduleLab()});
+          input.addEventListener('change',()=>scheduleLab(true));
+        });
         scheduleLab(true);
       }
       function drawLab(data){
         const canvas=document.getElementById('live-chart');
         const bounds=canvas.parentElement.getBoundingClientRect();
         const ratio=Math.min(devicePixelRatio||1,2);
-        canvas.width=Math.max(1,Math.round(bounds.width*ratio));canvas.height=Math.max(1,Math.round(bounds.height*ratio));
+        const targetWidth=Math.max(1,Math.round(bounds.width*ratio)),targetHeight=Math.max(1,Math.round(bounds.height*ratio));
+        if(canvas.width!==targetWidth||canvas.height!==targetHeight){canvas.width=targetWidth;canvas.height=targetHeight}
         const ctx=canvas.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,bounds.width,bounds.height);
         const points=data.series||[];if(points.length<2)return;
         const xKey=labMode==='electromagnetic-particle'?'x':'t';const yKey=labMode==='electromagnetic-particle'?'y':'speed';
-        const xs=points.map(item=>Number(item[xKey]));const ys=points.map(item=>Number(item[yKey]));
-        const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);const pad=28;
+        let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+        points.forEach(item=>{const x=Number(item[xKey]),y=Number(item[yKey]);if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y});const pad=28;
         const px=value=>pad+(value-minX)/Math.max(.0001,maxX-minX)*(bounds.width-pad*2);const py=value=>bounds.height-pad-(value-minY)/Math.max(.0001,maxY-minY)*(bounds.height-pad*2);
         ctx.strokeStyle='rgba(220,234,231,.12)';ctx.lineWidth=1;for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(pad,pad+(bounds.height-pad*2)*i/5);ctx.lineTo(bounds.width-pad,pad+(bounds.height-pad*2)*i/5);ctx.stroke()}
         ctx.strokeStyle='#65d7c6';ctx.lineWidth=2;ctx.beginPath();points.forEach((item,index)=>{const x=px(Number(item[xKey])),y=py(Number(item[yKey]));if(index)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke();
         const last=points.at(-1);ctx.fillStyle='#e8ad55';ctx.beginPath();ctx.arc(px(Number(last[xKey])),py(Number(last[yKey])),4,0,Math.PI*2);ctx.fill();
       }
       function renderLabResult(data){
-        latestSimulation=data;drawLab(data);const config=labConfigs[labMode];
+        latestSimulation=data;document.getElementById('save-live-run').disabled=false;cancelAnimationFrame(labDrawFrame);labDrawFrame=requestAnimationFrame(()=>drawLab(data));const config=labConfigs[labMode];
         document.getElementById('live-metrics').innerHTML=config.metrics.map(([key,label,unit])=>`<div class="live-metric"><span>${label}</span><strong>${data.metrics?.[key]??'--'} ${unit}</strong></div>`).join('');
         text('live-lab-state-text','LIVE BACKEND');text('live-message',`计算完成 · ${new Date(data.generated_at).toLocaleTimeString('zh-CN',{hour12:false})}`);
       }
       async function runLab(){
-        const button=document.getElementById('save-live-run');button.disabled=true;text('live-lab-state-text','CALCULATING');
-        try{const response=await fetch(`${API_ROOT}/lab/simulate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({experiment:labMode,parameters:labParameters()}),signal:AbortSignal.timeout(9000)});if(!response.ok)throw new Error(`HTTP ${response.status}`);renderLabResult(await response.json())}
-        catch(error){text('live-lab-state-text','DEGRADED');text('live-message','实时计算暂不可用，请进入完整实验')}
-        finally{button.disabled=false}
+        const requestedMode=labMode,parameters=labParameters(),cacheKey=`${requestedMode}:${JSON.stringify(parameters)}`;
+        if(labResultCache.has(cacheKey)){renderLabResult(labResultCache.get(cacheKey));return}
+        labRequestController?.abort();
+        const requestId=++labRequestId,controller=new AbortController();labRequestController=controller;
+        const timeout=setTimeout(()=>controller.abort(),9000);text('live-lab-state-text','CALCULATING');
+        try{
+          const response=await fetch(`${API_ROOT}/lab/simulate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({experiment:requestedMode,parameters}),signal:controller.signal});
+          if(!response.ok)throw new Error(`HTTP ${response.status}`);
+          const data=await response.json();if(requestId!==labRequestId||requestedMode!==labMode)return;
+          labResultCache.set(cacheKey,data);if(labResultCache.size>24)labResultCache.delete(labResultCache.keys().next().value);renderLabResult(data);
+        }
+        catch(error){if(error.name==='AbortError')return;text('live-lab-state-text','DEGRADED');text('live-message','实时计算暂不可用，请进入完整实验')}
+        finally{clearTimeout(timeout);if(requestId===labRequestId)labRequestController=null}
       }
-      function scheduleLab(immediate=false){clearTimeout(labTimer);labTimer=setTimeout(runLab,immediate?0:180)}
-      document.querySelectorAll('[data-lab-mode]').forEach(button=>button.addEventListener('click',()=>{labMode=button.dataset.labMode;document.querySelectorAll('[data-lab-mode]').forEach(item=>item.classList.toggle('is-active',item===button));renderLabFields()}));
+      function scheduleLab(immediate=false){clearTimeout(labTimer);labTimer=setTimeout(runLab,immediate?0:320)}
+      document.querySelectorAll('[data-lab-mode]').forEach(button=>button.addEventListener('click',()=>{labRequestController?.abort();labMode=button.dataset.labMode;document.querySelectorAll('[data-lab-mode]').forEach(item=>item.classList.toggle('is-active',item===button));renderLabFields()}));
       document.getElementById('save-live-run').addEventListener('click',async()=>{if(!latestSimulation)return;const button=document.getElementById('save-live-run');button.disabled=true;text('live-message','正在保存实验记录');try{const response=await fetch(`${API_ROOT}/lab/runs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:labClientId,experiment:labMode,parameters:labParameters(),results:latestSimulation.metrics,notes:'项目工坊实时实验台'}),signal:AbortSignal.timeout(9000)});if(!response.ok)throw new Error();text('live-message','实验记录已保存，可在完整实验中继续分析')}catch(error){text('live-message','保存失败，请稍后重试')}finally{button.disabled=false}});
       window.addEventListener('resize',()=>{if(latestSimulation)drawLab(latestSimulation)},{passive:true});
       renderLabFields();
